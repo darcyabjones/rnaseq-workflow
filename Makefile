@@ -26,13 +26,13 @@ SAMTOOLS_DOCKER=
 RSEQC_DOCKER=
 MULTIQC_DOCKER=
 HTSEQ_DOCKER=
-STRINGTIE_DOCKER=sudo docker run --rm -v $$PWD:/data:z darcyabjones/stringtie
+#STRINGTIE_DOCKER=sudo docker run --rm -v $$PWD:/data:z darcyabjones/stringtie
+STRINGTIE_DOCKER=
 
 # 01 - build index
 
 GENOME_INDEX_DIR=genome_index
 GENOME_INDEX_FILES=$(foreach i, 1, $(GENOME_INDEX_DIR)/$(PREFIX).$i.ht2)
-HISAT_BUILD=$(HISAT_DOCKER) hisat2-build -f $(1) $(GENOME_INDEX_DIR)/$(PREFIX)
 
 SPLICE_FILE=$(GENOME_INDEX_DIR)/splice_sites.txt
 EXTRACT_SPLICE=$(HISAT_DOCKER) extract_splice_sites.py $(1) > $(SPLICE_FILE)
@@ -106,7 +106,12 @@ MULTIQC_FILES=$(QC_DIR)/multiqc_report.html
 COUNT_DIR=counts
 COUNT_FILES=$(addprefix $(COUNT_DIR)/, $(addsuffix -counts.tsv, $(SAMPLE_NAMES)))
 
-# 05 - Assemble transcripts.
+# 05 - Calculate coverage
+
+COVERAGE_DIR=coverage
+COVERAGE_FILES=$(addprefix $(COVERAGE_DIR)/, $(addsuffix -coverage.bedgraph, $(SAMPLE_NAMES)))
+
+# 06 - Assemble transcripts.
 
 ASSEMBLE_DIR=assembly
 ASSEMBLE_EXTS=.stringtie.gtf .stringtie.ctab
@@ -130,6 +135,7 @@ index: $(GENOME_INDEX_FILES) $(SPLICE_FILE) $(NOVEL_SPLICE_FILE)
 align: $(BAM_FILES) $(BAI_FILES)
 qc: $(QC_FILES) $(MULTIQC_FILES)
 count: $(COUNT_FILES)
+coverage: $(COVERAGE_FILES)
 assemble: $(ASSEMBLE_FILES)
 
 # 01 - build index
@@ -284,7 +290,16 @@ $(COUNT_DIR)/%-counts.tsv: $(ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	$(HTSEQ_DOCKER) htseq-count --format=bam --order=pos --type=exon $(word 1, $^) $(word 2, $^) > $@.tmp \
 	  && mv $@.tmp $@
 
-# 05 - stringtie
+# 05 - Coverage
+
+COVERAGE_FILES=$(addprefix $(COVERAGE_DIR), $(addsuffix -coverage.bedgraph, $(SAMPLE_NAMES)))
+
+$(COVERAGE_DIR)/%-coverage.bedgraph: $(ALIGN_DIR)/%.bam $(GENOME_FILE)
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	  && mv $@.tmp $@
+
+# 06 - stringtie
 
 $(ASSEMBLE_TARGETS): $(ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
