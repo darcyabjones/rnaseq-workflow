@@ -250,6 +250,7 @@ $(HISAT_NOVEL_SPLICE_FILE): $(HISAT_SPLICE_FILE) $(HISAT_GENOME_INDEX_FILES) $(R
 		--no-discordant \
 		--no-temp-splicesite \
 		--downstream-transcriptome-assembly \
+		--dta-cufflinks \
 		--novel-splicesite-outfile $@ \
 		-x $(HISAT_GENOME_INDEX_DIR)/$(PREFIX) \
 		-1 $(subst $(SPACE),$(COMMA),$(READS1)) \
