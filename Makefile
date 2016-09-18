@@ -333,8 +333,8 @@ $(STAR_ALIGN_DIR)%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(
 		--readFilesCommand zcat \
 		--genomeDir $(STAR_GENOME_INDEX_DIR) \
 		--sjdbFileChrStartEnd $(STAR_GENOME_INDEX_DIR)/*SJ.out.tab \
-		--outSAMtype BAM SortedByCoordinate \
-		--outBAMcompression 10 \
+		--outSAMtype BAM Unsorted \
+		--outBAMcompression 1 \
 		--outSJfilterReads All \
 		--outSJfilterCountUniqueMin 10 5 5 5 \
 		--outSJfilterIntronMaxVsReadN 1 50 500 5000 \
@@ -352,7 +352,15 @@ $(STAR_ALIGN_DIR)%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(
 		--outSAMmapqUnique 50 \
 		--outFileNamePrefix $(basename $@). \
 		--readFilesIn $(word 1, $^) $(word 2, $^) \
-	&& mv $(basename $@).Aligned.sortedByCoord.out.bam $@
+	&& $(SAMTOOLS_DOCKER) samtools view \
+	  	-uT $(GENOME_FILE) \
+			$(basename $@).Aligned.sortedByCoord.out.bam \
+		| $(SAMTOOLS_DOCKER) samtools sort \
+		  -O BAM \
+			-@ $(NCPU) \
+			-l 9 \
+			-o $@ \
+	&& rm $(basename $@).Aligned.sortedByCoord.out.bam
 
 $(STAR_ALIGN_DIR)/%.bai: $(STAR_ALIGN_DIR)/%
 	@mkdir -p $(dir $@)
