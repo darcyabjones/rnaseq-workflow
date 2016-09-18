@@ -299,7 +299,6 @@ $(HISAT_BAM_COMPLETE_TARGETS): $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATT
 		--maxins 220 \
 		--min-intronlen 20 \
 		--max-intronlen 10000 \
-		--downstream-transcriptome-assembly \
 		--rna-strandness FR \
 		--no-mixed \
 		--no-discordant \
@@ -354,13 +353,13 @@ $(STAR_ALIGN_DIR)%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(
 		--readFilesIn $(word 1, $^) $(word 2, $^) \
 	&& $(SAMTOOLS_DOCKER) samtools view \
 	  	-uT $(GENOME_FILE) \
-			$(basename $@).Aligned.sortedByCoord.out.bam \
+			$(basename $@).Aligned.out.bam \
 		| $(SAMTOOLS_DOCKER) samtools sort \
 		  -O BAM \
 			-@ $(NCPU) \
 			-l 9 \
 			-o $@ \
-	&& rm $(basename $@).Aligned.sortedByCoord.out.bam
+	&& rm $(basename $@).Aligned.out.bam
 
 $(STAR_ALIGN_DIR)/%.bai: $(STAR_ALIGN_DIR)/%
 	@mkdir -p $(dir $@)
