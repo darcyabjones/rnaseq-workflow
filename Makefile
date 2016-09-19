@@ -277,9 +277,9 @@ $(STAR_GENOME_INDEX_DIR)/%.SJ.out.tab: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(REA
 		--outSAMmode None \
 		--outSJfilterReads All \
 		--outSJfilterOverhangMin 5 1 1 1 \
-		--outSJfilterCountUniqueMin 5 3 3 3 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
 		--outSJfilterDistToOtherSJmin 5 0 0 3 \
-		--outSJfilterIntronMaxVsReadN 1 1 100 500 1000 5000 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
 		--alignIntronMin 5 \
 		--alignIntronMax 10000 \
 		--alignSJoverhangMin 1 \
@@ -302,6 +302,7 @@ $(HISAT_BAM_COMPLETE_TARGETS): $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATT
 		--rna-strandness FR \
 		--no-mixed \
 		--no-discordant \
+		--no-temp-splicesite \
 		-x $(HISAT_GENOME_INDEX_DIR)/$(PREFIX) \
 		-1 $(word 1, $^) \
 		-2 $(word 2, $^) \
@@ -336,12 +337,13 @@ $(STAR_ALIGN_DIR)%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(
 		--outBAMcompression 1 \
 		--outSJfilterReads All \
 		--outSJfilterCountUniqueMin 10 5 5 5 \
-		--outSJfilterIntronMaxVsReadN 1 50 500 5000 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
 		--alignIntronMin 5 \
 		--alignIntronMax 10000 \
 		--alignSJoverhangMin 10 \
 		--alignSJDBoverhangMin 1 \
 		--alignSoftClipAtReferenceEnds No \
+		--outFilterType BySJout \
 		--outFilterMultimapNmax 1 \
 		--outFilterMismatchNmax 10 \
 		--outFilterMismatchNoverLmax 0.2 \
