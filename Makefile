@@ -28,6 +28,7 @@ MULTIQC_DOCKER=
 HTSEQ_DOCKER=
 #STRINGTIE_DOCKER=sudo docker run --rm -v $$PWD:/data:z darcyabjones/stringtie
 STRINGTIE_DOCKER=
+SUBREAD_DOCKER=
 
 # 01 - build index
 
@@ -159,10 +160,10 @@ STAR_QC_FILES=$(STAR_BAM_STAT_FILES) $(STAR_CLIPPING_PROFILE_FILES) \
 COUNT_DIR=counts
 
 HISAT_COUNT_DIR=$(COUNT_DIR)/hisat2
-HISAT_COUNT_FILES=$(addprefix $(HISAT_COUNT_DIR)/, $(addsuffix -counts.tsv, $(SAMPLE_NAMES)))
+HISAT_COUNT_FILES=$(addprefix $(HISAT_COUNT_DIR)/, feature_counts.tsv)
 
 STAR_COUNT_DIR=$(COUNT_DIR)/star
-STAR_COUNT_FILES=$(addprefix $(STAR_COUNT_DIR)/, $(addsuffix -counts.tsv, $(SAMPLE_NAMES)))
+STAR_COUNT_FILES=$(addprefix $(STAR_COUNT_DIR)/, feature_counts.tsv)
 
 # 05 - Calculate coverage
 
@@ -522,16 +523,13 @@ $(STAR_QC_DIR)/multiqc_report.html: $(STAR_BAM_FILES) $(STAR_QC_FILES)
 # Inplanta counts used about 8 GB of RAM to count, invitro counts used 15 GB of RAM, if this is too much for your computer i suggest looking at a different program or temporarily sorting by name.
 # Also by default, htseq-count sets a maximum ram useage of ~3GB, you need to edit the package following http://seqanswers.com/forums/showthread.php?p=197997 .
 
-$(HISAT_COUNT_DIR)/%-counts.tsv: $(HISAT_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
+$(HISAT_COUNT_FILES): $(HISAT_BAM_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	$(HTSEQ_DOCKER) htseq-count --format=bam --order=pos --type=exon --stranded=yes --mode=union $(word 1, $^) $(word 2, $^) > $@.tmp \
-	  && mv $@.tmp $@
+	$(SUBREAD_DOCKER) featureCounts -a $(ANNOTATION_FILE) -t exon -s 2 -p -B -C -T $(NCPU) -o $@ $(HISAT_BAM_FILES)
 
-$(STAR_COUNT_DIR)/%-counts.tsv: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
+$(STAR_COUNT_FILES): $(STAR_BAM_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	$(HTSEQ_DOCKER) htseq-count --format=bam --order=pos --type=exon --stranded=yes --mode=union $(word 1, $^) $(word 2, $^) > $@.tmp \
-	  && mv $@.tmp $@
-
+	$(SUBREAD_DOCKER) featureCounts -a $(ANNOTATION_FILE) -t exon -s 2 -p -B -C -T $(NCPU) -o $@ $(STAR_BAM_FILES)
 
 # 05 - Coverage
 
