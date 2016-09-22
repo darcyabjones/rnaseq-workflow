@@ -36,7 +36,6 @@ GENOME_INDEX_DIR=genome_index
 HISAT_GENOME_INDEX_DIR=$(GENOME_INDEX_DIR)/hisat2
 HISAT_GENOME_INDEX_FILES=$(foreach i, 1, $(HISAT_GENOME_INDEX_DIR)/$(PREFIX).$i.ht2)
 HISAT_SPLICE_FILE=$(HISAT_GENOME_INDEX_DIR)/splice_sites.txt
-HISAT_EXTRACT_SPLICE=$(HISAT_DOCKER) extract_splice_sites.py $(1) > $(HISAT_SPLICE_FILE)
 HISAT_NOVEL_SPLICE_FILE=$(HISAT_GENOME_INDEX_DIR)/novel_splice_sites.txt
 
 STAR_GENOME_INDEX_DIR=$(GENOME_INDEX_DIR)/star
@@ -66,7 +65,7 @@ STAR_NOVEL_SPLICE_FILES=$(addprefix $(STAR_GENOME_INDEX_DIR)/, $(addsuffix .SJ.o
 
 ALIGN_DIR=align
 HISAT_ALIGN_DIR=$(ALIGN_DIR)/hisat2
-HISAT_BAM_COMPLETE_TARGETS=$(addprefix $(HISAT_ALIGN_DIR)/, $(addsuffix .complete.bam, %)))
+HISAT_BAM_COMPLETE_TARGETS=$(addprefix $(HISAT_ALIGN_DIR)/, $(addsuffix .complete.bam, %))
 HISAT_BAM_COMPLETE_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_BAM_COMPLETE_TARGETS)))
 HISAT_BAI_COMPLETE_FILES=$(addsuffix .bai, $(HISAT_BAM_COMPLETE_FILES))
 
@@ -190,7 +189,10 @@ STAR_STRINGTIE_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRING
 
 # Do the actual work
 phony:
-	@echo $(STAR_NOVEL_SPLICE_FILES)
+	@echo $(HISAT_BAM_COMPLETE_FILES)
+	@echo
+	@echo $(HISAT_BAM_FILES)
+
 
 cleanall: all clean
 	@rm -rf $^
@@ -213,7 +215,7 @@ hisat_multiqc: $(HISAT_MULTIQC_FILES)
 star_qc: $(STAR_QC_FILES)
 star_multiqc: $(STAR_MULTIQC_FILES)
 qc: hisat_qc star_qc
-multiqc: hisat_multiqc
+multiqc: hisat_multiqc star_multiqc
 
 hisat_count: $(HISAT_COUNT_FILES)
 star_count: $(STAR_COUNT_FILES)
@@ -326,7 +328,7 @@ $(HISAT_ALIGN_DIR)/%.bai: $(HISAT_ALIGN_DIR)/%
 	$(SAMTOOLS_DOCKER) samtools index $<
 
 
-$(STAR_ALIGN_DIR)%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(STAR_GENOME_INDEX_FILES) $(STAR_GENOME_INDEX_DIR)/*.SJ.out.tab
+$(STAR_ALIGN_DIR)/%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(STAR_GENOME_INDEX_FILES) $(STAR_GENOME_INDEX_DIR)/*.SJ.out.tab
 	@mkdir -p $(dir $@)
 	$(STAR_DOCKER) STAR \
 		--runThreadN $(NCPU) \
