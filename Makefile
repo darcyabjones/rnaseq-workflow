@@ -168,12 +168,13 @@ STAR_COUNT_FILES=$(addprefix $(STAR_COUNT_DIR)/, feature_counts.tsv)
 # 05 - Calculate coverage
 
 COVERAGE_DIR=coverage
+COVERAGE_EXTS=-coverage.bedgraph -coverage-fwd.bedgraph -coverage-rev.bedgraph
 
 HISAT_COVERAGE_DIR=$(COVERAGE_DIR)/hisat2
-HISAT_COVERAGE_FILES=$(addprefix $(HISAT_COVERAGE_DIR)/, $(addsuffix -coverage.bedgraph, $(SAMPLE_NAMES)))
+HISAT_COVERAGE_FILES=$(foreach e, $(COVERAGE_EXTS), $(addprefix $(HISAT_COVERAGE_DIR)/, $(addsuffix $(e), $(SAMPLE_NAMES))))
 
 STAR_COVERAGE_DIR=$(COVERAGE_DIR)/star
-STAR_COVERAGE_FILES=$(addprefix $(STAR_COVERAGE_DIR)/, $(addsuffix -coverage.bedgraph, $(SAMPLE_NAMES)))
+STAR_COVERAGE_FILES=$(foreach e, $(COVERAGE_EXTS), $(addprefix $(STAR_COVERAGE_DIR)/, $(addsuffix $(e), $(SAMPLE_NAMES))))
 
 # 06 - Assemble transcripts.
 
@@ -248,7 +249,8 @@ $(HISAT_NOVEL_SPLICE_FILE): $(HISAT_SPLICE_FILE) $(HISAT_GENOME_INDEX_FILES) $(R
 		--maxins 220 \
 		--min-intronlen 20 \
 		--max-intronlen 10000 \
-		--rna-strandness FR \
+		--rna-strandness RF \
+		--fr \
 		--no-mixed \
 		--no-discordant \
 		--no-temp-splicesite \
@@ -292,6 +294,7 @@ $(STAR_GENOME_INDEX_DIR)/%.SJ.out.tab: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(REA
 		--readFilesIn $(word 1, $^) $(word 2, $^)
 
 # 02 - align to reference
+#		--no-temp-splicesite
 $(HISAT_BAM_COMPLETE_TARGETS): $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $(HISAT_SPLICE_FILE) $(HISAT_NOVEL_SPLICE_FILE) $(HISAT_GENOME_INDEX_FILES)
 	@mkdir -p $(dir $@)
 	$(HISAT_DOCKER) hisat2 \
@@ -303,9 +306,9 @@ $(HISAT_BAM_COMPLETE_TARGETS): $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATT
 		--min-intronlen 20 \
 		--max-intronlen 10000 \
 		--rna-strandness FR \
+		--fr \
 		--no-mixed \
 		--no-discordant \
-		--no-temp-splicesite \
 		-x $(HISAT_GENOME_INDEX_DIR)/$(PREFIX) \
 		-1 $(word 1, $^) \
 		-2 $(word 2, $^) \
@@ -460,6 +463,7 @@ $(STAR_DELETION_PROFILE_TARGETS): $(STAR_ALIGN_DIR)/%.bam $(STAR_ALIGN_DIR)/%.ba
 	@mkdir -p $(dir $@)
 	$(RSEQC_DOCKER) deletion_profile.py \
 		-i $< \
+
 		-l 125 \
 		-o $(addprefix $(dir $@), $(notdir $(basename $(basename $@))))
 
@@ -533,14 +537,45 @@ $(STAR_COUNT_FILES): $(STAR_BAM_FILES) $(ANNOTATION_FILE)
 
 # 05 - Coverage
 
-$(HISAT_COVERAGE_DIR)/%-coverage.bedgraph: $(HISAT_ALIGN_DIR)/%.bam $(GENOME_FILE)
+$(HISAT_COVERAGE_DIR)/%-norm_factor.txt: $(HISAT_ALIGN_DIR)/%.bam
 	@mkdir -p $(dir $@)
-	bedtools genomecov -bga -split -trackline -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	echo "10^6/$$(samtools view -F 0x40 $< | cut -f1 | sort | uniq | wc -l)" | bc -l > $@.tmp && \
+		mv $@.tmp $@
+
+$(HISAT_COVERAGE_DIR)/%-coverage.bedgraph: $(HISAT_ALIGN_DIR)/%.bam $(GENOME_FILE) $(HISAT_COVERAGE_DIR)/%-norm_factor.txt
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
 	  && mv $@.tmp $@
 
-$(STAR_COVERAGE_DIR)/%-coverage.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_FILE)
+$(HISAT_COVERAGE_DIR)/%-coverage-fwd.bedgraph: $(HISAT_ALIGN_DIR)/%.bam $(GENOME_FILE) $(HISAT_COVERAGE_DIR)/%-norm_factor.txt
 	@mkdir -p $(dir $@)
-	bedtools genomecov -bga -split -trackline -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "+" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	  && mv $@.tmp $@
+
+$(HISAT_COVERAGE_DIR)/%-coverage-rev.bedgraph: $(HISAT_ALIGN_DIR)/%.bam $(GENOME_FILE) $(HISAT_COVERAGE_DIR)/%-norm_factor.txt
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "-" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	  && mv $@.tmp $@
+
+
+$(STAR_COVERAGE_DIR)/%-norm_factor.txt: $(STAR_ALIGN_DIR)/%.bam
+	@mkdir -p $(dir $@)
+	echo "10^6/$$(samtools view -F 0x40 $< | cut -f1 | sort | uniq | wc -l)" | bc -l > $@.tmp && \
+		mv $@.tmp $@
+
+$(STAR_COVERAGE_DIR)/%-coverage.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_FILE) $(STAR_COVERAGE_DIR)/%-norm_factor.txt
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	  && mv $@.tmp $@
+
+$(STAR_COVERAGE_DIR)/%-coverage-fwd.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_FILE) $(STAR_COVERAGE_DIR)/%-norm_factor.txt
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "+" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
+	  && mv $@.tmp $@
+
+$(STAR_COVERAGE_DIR)/%-coverage-rev.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_FILE) $(STAR_COVERAGE_DIR)/%-norm_factor.txt
+	@mkdir -p $(dir $@)
+	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "-" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
 	  && mv $@.tmp $@
 
 # 06 - stringtie
