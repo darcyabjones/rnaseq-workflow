@@ -89,6 +89,13 @@ ENV/
 .ropeproject
 
 
+# Project directories
+align/*
+bam_qc/*
+counts/*
+coverage/*
+genome_index/*
+data/*
 
 # bio stuff
 *.fastq
