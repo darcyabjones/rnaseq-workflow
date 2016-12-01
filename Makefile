@@ -176,18 +176,37 @@ HISAT_COVERAGE_FILES=$(foreach e, $(COVERAGE_EXTS), $(addprefix $(HISAT_COVERAGE
 STAR_COVERAGE_DIR=$(COVERAGE_DIR)/star
 STAR_COVERAGE_FILES=$(foreach e, $(COVERAGE_EXTS), $(addprefix $(STAR_COVERAGE_DIR)/, $(addsuffix $(e), $(SAMPLE_NAMES))))
 
-# 06 - Assemble transcripts.
+# 06a - Assemble transcripts. stringtie a
 
-STRINGTIE_DIR=stringtie
-STRINGTIE_EXTS=.stringtie.gtf .stringtie.ctab
+STRINGTIE_ASS_DIR=stringtie_assemble
+STRINGTIE_ASS_EXTS=.stringtie.gtf
 
-HISAT_STRINGTIE_DIR=$(STRINGTIE_DIR)/hisat2
-HISAT_STRINGTIE_TARGETS=$(foreach e, $(STRINGTIE_EXTS), $(addprefix $(HISAT_STRINGTIE_DIR)/, $(addsuffix $(e), %)))
-HISAT_STRINGTIE_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_STRINGTIE_TARGETS)))
+HISAT_STRINGTIE_ASS_DIR=$(STRINGTIE_ASS_DIR)/hisat2
+HISAT_STRINGTIE_ASS_TARGETS=$(foreach e, $(STRINGTIE_ASS_EXTS), $(addprefix $(HISAT_STRINGTIE_ASS_DIR)/, $(addsuffix $(e), %)))
+HISAT_STRINGTIE_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_STRINGTIE_ASS_TARGETS)))
 
-STAR_STRINGTIE_DIR=$(STRINGTIE_DIR)/star
-STAR_STRINGTIE_TARGETS=$(foreach e, $(STRINGTIE_EXTS), $(addprefix $(STAR_STRINGTIE_DIR)/, $(addsuffix $(e), %)))
-STAR_STRINGTIE_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRINGTIE_TARGETS)))
+STAR_STRINGTIE_ASS_DIR=$(STRINGTIE_ASS_DIR)/star
+STAR_STRINGTIE_ASS_TARGETS=$(foreach e, $(STRINGTIE_ASS_EXTS), $(addprefix $(STAR_STRINGTIE_ASS_DIR)/, $(addsuffix $(e), %)))
+STAR_STRINGTIE_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRINGTIE_ASS_TARGETS)))
+
+# 06b - merge gtf files
+
+HISAT_STRINGTIE_ASS_MERGED=$(HISAT_STRINGTIE_ASS_DIR)/merged.gtf
+STAR_STRINGTIE_ASS_MERGED=$(STAR_STRINGTIE_ASS_DIR)/merged.gtf
+
+# 07 - Count reads for ballgown
+
+STRINGTIE_COUNT_DIR=stringtie_count
+STRINGTIE_COUNT_EXTS=.stringtie.ctab
+
+HISAT_STRINGTIE_COUNT_DIR=$(STRINGTIE_COUNT_DIR)/hisat2
+HISAT_STRINGTIE_COUNT_TARGETS=$(foreach e, $(STRINGTIE_COUNT_EXTS), $(addprefix $(HISAT_STRINGTIE_COUNT_DIR)/, $(addsuffix $(e), %)))
+HISAT_STRINGTIE_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_STRINGTIE_COUNT_TARGETS)))
+
+STAR_STRINGTIE_COUNT_DIR=$(STRINGTIE_COUNT_DIR)/star
+STAR_STRINGTIE_COUNT_TARGETS=$(foreach e, $(STRINGTIE_COUNT_EXTS), $(addprefix $(STAR_STRINGTIE_COUNT_DIR)/, $(addsuffix $(e), %)))
+STAR_STRINGTIE_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRINGTIE_COUNT_TARGETS)))
+
 
 # Do the actual work
 phony:
@@ -227,9 +246,14 @@ hisat_coverage: $(HISAT_COVERAGE_FILES)
 star_coverage: $(STAR_COVERAGE_FILES)
 coverage: hisat_coverage star_coverage
 
-hisat_stringtie: $(HISAT_STRINGTIE_FILES)
-star_stringtie:
-stringtie: hisat_stringtie star_stringtie
+hisat_stringtie_ass: $(HISAT_STRINGTIE_ASS_MERGED)
+star_stringtie_ass: $(STAR_STRINGTIE_ASS_MERGED)
+stringtie_ass: star_stringtie_ass hisat_stringtie_ass
+
+hisat_stringtie_count: $(HISAT_STRINGTIE_COUNT_FILES)
+star_stringtie_count: $(STAR_STRINGTIE_COUNT_FILES)
+stringtie_count: star_stringtie_count
+
 
 # 01 - build index
 $(HISAT_GENOME_INDEX_FILES): $(GENOME_FILE)
@@ -355,6 +379,7 @@ $(STAR_ALIGN_DIR)/%.bam: $(DATA)/%$(READS1_PATTERN) $(DATA)/%$(READS2_PATTERN) $
 		--outFilterMismatchNoverLmax 0.2 \
 		--outMultimapperOrder Random \
 		--outSAMattributes All \
+		--outSAMstrandField intronMotif\
 		--outSAMattrIHstart 0 \
 		--outSAMmapqUnique 50 \
 		--outFileNamePrefix $(basename $@). \
@@ -578,14 +603,39 @@ $(STAR_COVERAGE_DIR)/%-coverage-rev.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_F
 	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "-" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
 	  && mv $@.tmp $@
 
-# 06 - stringtie
+# 06a - stringtie assemble
 
-$(HISAT_STRINGTIE_TARGETS): $(HISAT_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
+$(STAR_STRINGTIE_ASS_DIR)/%.stringtie.gtf: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
 	$(STRINGTIE_DOCKER) stringtie \
 	  $(word 1, $^) \
 	  -p $(NCPU) \
 		-G $(ANNOTATION_FILE) \
+		-o $@
+
+#		-a 1
+#		-j 5
+#		-m 50
+
+
+# 06b - stringtie merge
+
+$(STAR_STRINGTIE_ASS_MERGED): $(STAR_STRINGTIE_ASS_FILES) $(ANNOTATION_FILE)
+	@mkdir -p $(dir $@)
+	$(STRINGTIE_DOCKER) stringtie \
+		--merge
+	  -p $(NCPU) \
+		-G $(ANNOTATION_FILE) \
+		-o $@ \
+		$(STAR_STRINGTIE_ASS_TARGETS)
+
+# 07 - stringtie count
+
+$(star_stringtie_COUNT_TARGETS): $(STAR_ALIGN_DIR)/%.bam $(MERGED_ANNOTATION_FILE)
+	@mkdir -p $(dir $@)
+	$(STRINGTIE_DOCKER) stringtie \
+	  $(word 1, $^) \
+	  -p $(NCPU) \
+		-G $(MERGED_ANNOTATION_FILE) \
 		-e \
-		-b $(dir $@)/$(notdir $(basename $(word 1, $^))) \
-		-o $(dir $@)/$(notdir $(basename $(word 1, $^))).stringtie.gtf
+		-b $(dir $@)/$(notdir $(basename $(word 1, $^)))
