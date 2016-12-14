@@ -4,7 +4,7 @@ SPACE +=
 COMMA := ,
 NCPU=4
 
-DATA=data
+DATA=$(C)/data
 PREFIX=SN15
 GENOME_FILE=$(DATA)/Parastagonospora_nodorum_SN15_scaffolds.fasta
 ANNOTATION_FILE=$(DATA)/Parastagonospora_nodorum_SN15.gtf
@@ -178,41 +178,49 @@ STAR_COVERAGE_FILES=$(foreach e, $(COVERAGE_EXTS), $(addprefix $(STAR_COVERAGE_D
 
 # 06a - Assemble transcripts. stringtie a
 
-STRINGTIE_ASS_DIR=stringtie_assemble
-STRINGTIE_ASS_EXTS=.stringtie.gtf
+CUFFLINKS_ASS_DIR=cufflinks_assemble
+CUFFLINKS_ASS_FILES=transcripts.gtf # isoforms.fpkm_tracking genes.fpkm_tracking
 
-HISAT_STRINGTIE_ASS_DIR=$(STRINGTIE_ASS_DIR)/hisat2
-HISAT_STRINGTIE_ASS_TARGETS=$(foreach e, $(STRINGTIE_ASS_EXTS), $(addprefix $(HISAT_STRINGTIE_ASS_DIR)/, $(addsuffix $(e), %)))
-HISAT_STRINGTIE_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_STRINGTIE_ASS_TARGETS)))
+HISAT_CUFFLINKS_ASS_DIR=$(CUFFLINKS_ASS_DIR)/hisat2
+HISAT_CUFFLINKS_ASS_TARGETS=$(foreach e, $(CUFFLINKS_ASS_FILES), $(addprefix $(HISAT_CUFFLINKS_ASS_DIR)/%/, $(e)))
+HISAT_CUFFLINKS_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_CUFFLINKS_ASS_TARGETS)))
 
-STAR_STRINGTIE_ASS_DIR=$(STRINGTIE_ASS_DIR)/star
-STAR_STRINGTIE_ASS_TARGETS=$(foreach e, $(STRINGTIE_ASS_EXTS), $(addprefix $(STAR_STRINGTIE_ASS_DIR)/, $(addsuffix $(e), %)))
-STAR_STRINGTIE_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRINGTIE_ASS_TARGETS)))
+STAR_CUFFLINKS_ASS_DIR=$(CUFFLINKS_ASS_DIR)/star
+STAR_CUFFLINKS_ASS_TARGETS=$(foreach e, $(CUFFLINKS_ASS_FILES), $(addprefix $(STAR_CUFFLINKS_ASS_DIR)/%/, $(e)))
+STAR_CUFFLINKS_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_CUFFLINKS_ASS_TARGETS)))
 
 # 06b - merge gtf files
 
-HISAT_STRINGTIE_ASS_MERGED=$(HISAT_STRINGTIE_ASS_DIR)/merged.gtf
-STAR_STRINGTIE_ASS_MERGED=$(STAR_STRINGTIE_ASS_DIR)/merged.gtf
+HISAT_CUFFLINKS_ASS_MERGED=$(HISAT_CUFFLINKS_ASS_DIR)/merged.gtf
+STAR_CUFFLINKS_ASS_MERGED=$(STAR_CUFFLINKS_ASS_DIR)/merged.gtf
 
 # 07 - Count reads for ballgown
+# Using table maker from here https://github.com/leekgroup/tablemaker
 
-STRINGTIE_COUNT_DIR=stringtie_count
-STRINGTIE_COUNT_EXTS=.stringtie.ctab
+TABLEMAKER_COUNT_DIR=stringtie_count
+TABLEMAKER_COUNT_FILE=e_data.ctab
 
-HISAT_STRINGTIE_COUNT_DIR=$(STRINGTIE_COUNT_DIR)/hisat2
-HISAT_STRINGTIE_COUNT_TARGETS=$(foreach e, $(STRINGTIE_COUNT_EXTS), $(addprefix $(HISAT_STRINGTIE_COUNT_DIR)/, $(addsuffix $(e), %)))
-HISAT_STRINGTIE_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_STRINGTIE_COUNT_TARGETS)))
+HISAT_TABLEMAKER_COUNT_DIR=$(TABLEMAKER_COUNT_DIR)/hisat2
+HISAT_TABLEMAKER_COUNT_TARGETS=$(addprefix $(HISAT_TABLEMAKER_COUNT_DIR)/, $(addsuffix /$(TABLEMAKER_COUNT_FILE), %))
+HISAT_TABLEMAKER_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_TABLEMAKER_COUNT_TARGETS)))
 
-STAR_STRINGTIE_COUNT_DIR=$(STRINGTIE_COUNT_DIR)/star
-STAR_STRINGTIE_COUNT_TARGETS=$(foreach e, $(STRINGTIE_COUNT_EXTS), $(addprefix $(STAR_STRINGTIE_COUNT_DIR)/, $(addsuffix $(e), %)))
-STAR_STRINGTIE_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_STRINGTIE_COUNT_TARGETS)))
+STAR_TABLEMAKER_COUNT_DIR=$(TABLEMAKER_COUNT_DIR)/star
+STAR_TABLEMAKER_COUNT_TARGETS=$(addprefix $(STAR_TABLEMAKER_COUNT_DIR)/, $(addsuffix /$(TABLEMAKER_COUNT_FILE), %))
+STAR_TABLEMAKER_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_TABLEMAKER_COUNT_TARGETS)))
 
 
-# Do the actual work
+#08 - Count reads for  DEXSeq
+
+DEXSEQ_DIR=dexseq
+
+DEXSEQ_GTF=$(addprefix $(DEXSEQ_DIR)/,$(PREFIX)-dexseq_prepped.gtf)
+DEXSEQ_COUNT_FILE=$(addprefix $(DEXSEQ_DIR)/,exon_counts.tsv)
+
+
 phony:
-	@echo $(HISAT_BAM_COMPLETE_FILES)
+	@echo $(DEXSEQ_GTF)
 	@echo
-	@echo $(HISAT_BAM_FILES)
+	@echo $(DEXSEQ_COUNT_FILE)
 
 
 cleanall: all clean
@@ -246,14 +254,16 @@ hisat_coverage: $(HISAT_COVERAGE_FILES)
 star_coverage: $(STAR_COVERAGE_FILES)
 coverage: hisat_coverage star_coverage
 
-hisat_stringtie_ass: $(HISAT_STRINGTIE_ASS_MERGED)
-star_stringtie_ass: $(STAR_STRINGTIE_ASS_MERGED)
-stringtie_ass: star_stringtie_ass hisat_stringtie_ass
+hisat_cufflinks_ass: $(HISAT_CUFFLINKS_ASS_MERGED)
+star_cufflinks_ass: $(STAR_CUFFLINKS_ASS_MERGED)
+cufflinks_ass: star_cufflinks_ass hisat_cufflinks_ass
 
-hisat_stringtie_count: $(HISAT_STRINGTIE_COUNT_FILES)
-star_stringtie_count: $(STAR_STRINGTIE_COUNT_FILES)
-stringtie_count: star_stringtie_count
+star_tablemaker_counts: $(STAR_TABLEMAKER_COUNT_FILES)
+tablemaker_counts: star_tablemaker_counts
 
+
+dexseq_annotations: $(DEXSEQ_GTF)
+dexseq_counts: $(DEXSEQ_COUNT_FILE)
 
 # 01 - build index
 $(HISAT_GENOME_INDEX_FILES): $(GENOME_FILE)
@@ -603,39 +613,74 @@ $(STAR_COVERAGE_DIR)/%-coverage-rev.bedgraph: $(STAR_ALIGN_DIR)/%.bam $(GENOME_F
 	bedtools genomecov -bga -split -trackline -scale $(shell cat $(word 3, $^)) -strand "-" -ibam $(word 1, $^) -g $(word 2, $^) > $@.tmp \
 	  && mv $@.tmp $@
 
-# 06a - stringtie assemble
+# 06a - cufflinks assemble
 
-$(STAR_STRINGTIE_ASS_DIR)/%.stringtie.gtf: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
+$(HISAT_CUFFLINKS_ASS_DIR)/%/transcripts.gtf: $(HISAT_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	$(STRINGTIE_DOCKER) stringtie \
-	  $(word 1, $^) \
+	cufflinks \
 	  -p $(NCPU) \
-		-G $(ANNOTATION_FILE) \
-		-o $@
+		-g $(ANNOTATION_FILE) \
+		-b $(GENOME_FILE) \
+		--library-type=fr-firststrand \
+		--max-intron-length 10000 \
+		--min-intron-length 5 \
+		-o $(dir $@) \
+	  $(word 1, $^)
 
-#		-a 1
-#		-j 5
-#		-m 50
-
-
-# 06b - stringtie merge
-
-$(STAR_STRINGTIE_ASS_MERGED): $(STAR_STRINGTIE_ASS_FILES) $(ANNOTATION_FILE)
+$(STAR_CUFFLINKS_ASS_DIR)/%/transcripts.gtf: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	$(STRINGTIE_DOCKER) stringtie \
+	cufflinks \
+	  -p $(NCPU) \
+		-g $(ANNOTATION_FILE) \
+		-b $(GENOME_FILE) \
+		--library-type=fr-firststrand \
+		--max-intron-length 10000 \
+		--min-intron-length 5 \
+		-o $(dir $@) \
+	  $(word 1, $^)
+
+
+# 06b - cufflinks merge
+
+$(HISAT_CUFFLINKS_ASS_MERGED): $(HISAT_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
+	@mkdir -p $(dir $@)
+	
+	@echo $(subst $(SPACE),\\n,$(HISAT_CUFFLINKS_ASS_FILES)) > $(dir $@)/to_be_merged.txt
+	cuffmerge \
 		--merge
 	  -p $(NCPU) \
-		-G $(ANNOTATION_FILE) \
-		-o $@ \
-		$(STAR_STRINGTIE_ASS_TARGETS)
+		-g $(ANNOTATION_FILE) \
+		-s $(GENOME_FILE) \KER_COUNT_FILE
+		-o $(dir $@) \
+		$(dir $@)/to_be_merged.txt
 
-# 07 - stringtie count
-
-$(star_stringtie_COUNT_TARGETS): $(STAR_ALIGN_DIR)/%.bam $(MERGED_ANNOTATION_FILE)
+$(STAR_CUFFLINKS_ASS_MERGED): $(STAR_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	$(STRINGTIE_DOCKER) stringtie \
-	  $(word 1, $^) \
+	
+	@echo $(subst $(SPACE),\\n,$(STAR_CUFFLINKS_ASS_FILES)) > $(dir $@)/to_be_merged.txt
+	cuffmerge \
 	  -p $(NCPU) \
-		-G $(MERGED_ANNOTATION_FILE) \
-		-e \
-		-b $(dir $@)/$(notdir $(basename $(word 1, $^)))
+          -g $(ANNOTATION_FILE) \
+          -s $(GENOME_FILE) \
+          -o $(dir $@) \
+          $(dir $@)/to_be_merged.txt
+		
+# 07 - tablemaker counts
+		
+$(STAR_TABLEMAKER_COUNT_DIR)/%/$(TABLEMAKER_COUNT_FILE): $(STAR_CUFFLINKS_ASS_MERGED) $(STAR_ALIGN_DIR)/%.bam 
+	@mkdir -p $(dir $@)
+	tablemaker \
+		-p $(NCPU) \
+		-W \
+                --library-type=fr-firststrand \
+		-G $(STAR_CUFFLINKS_ASS_MERGED) \
+		-o $(dir $@) \
+		$(word 2, $^)
+
+$(DEXSEQ_GTF): $(STAR_CUFFLINKS_ASS_MERGED)
+	@mkdir -p $(dir $@)
+	bin/dexseq_prepare_annotation2.py -f $@ $< $@.gff
+
+$(DEXSEQ_COUNT_FILE): $(STAR_BAM_FILES) $(DEXSEQ_GTF)
+	@mkdir -p $(dir $@)
+	featureCounts -f -O -s 2 -p -T $(NCPU) -F GTF -t exonic_part -a $(DEXSEQ_GTF) -o $@ $(STAR_BAM_FILES)
