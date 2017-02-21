@@ -2,7 +2,7 @@ C=$(shell pwd)
 SPACE :=
 SPACE +=
 COMMA := ,
-NCPU=4
+NCPU=24
 
 DATA=$(C)/data
 PREFIX=SN15

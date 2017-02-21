@@ -1,0 +1,426 @@
+featureCounts -a /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf -t exon -s 2 -p -B -C -T 24 -o counts/star/feature_counts.tsv align/star/inplanta-3KO-020.bam align/star/inplanta-3KO-021.bam align/star/inplanta-3KO-022.bam align/star/inplanta-3KO-023.bam align/star/inplanta-Pf2-024.bam align/star/inplanta-Pf2-025.bam align/star/inplanta-Pf2-026.bam align/star/inplanta-Pf2-027.bam align/star/inplanta-SN15-016.bam align/star/inplanta-SN15-017.bam align/star/inplanta-SN15-018.bam align/star/inplanta-SN15-019.bam align/star/invitro-3KO-004.bam align/star/invitro-3KO-005.bam align/star/invitro-3KO-006.bam align/star/invitro-3KO-007.bam align/star/invitro-Pf2-008.bam align/star/invitro-Pf2-009.bam align/star/invitro-Pf2-010.bam align/star/invitro-Pf2-011.bam align/star/invitro-SN15-000.bam align/star/invitro-SN15-001.bam align/star/invitro-SN15-002.bam align/star/invitro-SN15-003.bam
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ <|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+	  v1.5.1
+
+//========================== featureCounts setting ===========================\\
+||                                                                            ||
+||             Input files : 24 BAM files                                     ||
+||                           P align/star/inplanta-3KO-020.bam                ||
+||                           P align/star/inplanta-3KO-021.bam                ||
+||                           P align/star/inplanta-3KO-022.bam                ||
+||                           P align/star/inplanta-3KO-023.bam                ||
+||                           P align/star/inplanta-Pf2-024.bam                ||
+||                           P align/star/inplanta-Pf2-025.bam                ||
+||                           P align/star/inplanta-Pf2-026.bam                ||
+||                           P align/star/inplanta-Pf2-027.bam                ||
+||                           P align/star/inplanta-SN15-016.bam               ||
+||                           P align/star/inplanta-SN15-017.bam               ||
+||                           P align/star/inplanta-SN15-018.bam               ||
+||                           P align/star/inplanta-SN15-019.bam               ||
+||                           P align/star/invitro-3KO-004.bam                 ||
+||                           P align/star/invitro-3KO-005.bam                 ||
+||                           P align/star/invitro-3KO-006.bam                 ||
+||                           P align/star/invitro-3KO-007.bam                 ||
+||                           P align/star/invitro-Pf2-008.bam                 ||
+||                           P align/star/invitro-Pf2-009.bam                 ||
+||                           P align/star/invitro-Pf2-010.bam                 ||
+||                           P align/star/invitro-Pf2-011.bam                 ||
+||                           P align/star/invitro-SN15-000.bam                ||
+||                           P align/star/invitro-SN15-001.bam                ||
+||                           P align/star/invitro-SN15-002.bam                ||
+||                           P align/star/invitro-SN15-003.bam                ||
+||                                                                            ||
+||             Output file : counts/star/feature_counts.tsv                   ||
+||                 Summary : counts/star/feature_counts.tsv.summary           ||
+||              Annotation : /scratch/y95/darcyabjones/rnaseq-workflow/da ... ||
+||      Dir for temp files : counts/star                                      ||
+||                                                                            ||
+||                 Threads : 16                                               ||
+||                   Level : meta-feature level                               ||
+||              Paired-end : yes                                              ||
+||         Strand specific : reversely stranded                               ||
+||      Multimapping reads : not counted                                      ||
+|| Multi-overlapping reads : not counted                                      ||
+||       Overlapping bases : 0.0%                                             ||
+||                                                                            ||
+||          Chimeric reads : not counted                                      ||
+||        Both ends mapped : required                                         ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Load annotation file /scratch/y95/darcyabjones/rnaseq-workflow/data/Pa ... ||
+||    Features : 36554                                                        ||
+||    Meta-features : 13691                                                   ||
+||    Chromosomes/contigs : 51                                                ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-3KO-020.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 8696906                                               ||
+||    Successfully assigned fragments : 7956011 (91.5%)                       ||
+||    Running time : 0.17 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-3KO-021.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 7902576                                               ||
+||    Successfully assigned fragments : 7316943 (92.6%)                       ||
+||    Running time : 0.16 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-3KO-022.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 11897763                                              ||
+||    Successfully assigned fragments : 11060095 (93.0%)                      ||
+||    Running time : 0.25 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-3KO-023.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 8838857                                               ||
+||    Successfully assigned fragments : 8183434 (92.6%)                       ||
+||    Running time : 0.21 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-Pf2-024.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 3403714                                               ||
+||    Successfully assigned fragments : 3096910 (91.0%)                       ||
+||    Running time : 0.09 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-Pf2-025.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 4604718                                               ||
+||    Successfully assigned fragments : 4177258 (90.7%)                       ||
+||    Running time : 0.10 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-Pf2-026.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 5980083                                               ||
+||    Successfully assigned fragments : 5465085 (91.4%)                       ||
+||    Running time : 0.11 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-Pf2-027.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 5071420                                               ||
+||    Successfully assigned fragments : 4634139 (91.4%)                       ||
+||    Running time : 0.10 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-SN15-016.bam...                       ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 18470278                                              ||
+||    Successfully assigned fragments : 17026337 (92.2%)                      ||
+||    Running time : 0.39 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-SN15-017.bam...                       ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 17970560                                              ||
+||    Successfully assigned fragments : 16701548 (92.9%)                      ||
+||    Running time : 0.37 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-SN15-018.bam...                       ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 18253406                                              ||
+||    Successfully assigned fragments : 16965138 (92.9%)                      ||
+||    Running time : 0.36 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/inplanta-SN15-019.bam...                       ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 22545818                                              ||
+||    Successfully assigned fragments : 20932834 (92.8%)                      ||
+||    Running time : 0.45 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-3KO-004.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 24036751                                              ||
+||    Successfully assigned fragments : 21715758 (90.3%)                      ||
+||    Running time : 0.51 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-3KO-005.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 24072798                                              ||
+||    Successfully assigned fragments : 21975426 (91.3%)                      ||
+||    Running time : 0.50 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-3KO-006.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 21796336                                              ||
+||    Successfully assigned fragments : 19819219 (90.9%)                      ||
+||    Running time : 0.46 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-3KO-007.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 22585988                                              ||
+||    Successfully assigned fragments : 20757470 (91.9%)                      ||
+||    Running time : 0.47 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-Pf2-008.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 23455804                                              ||
+||    Successfully assigned fragments : 21613230 (92.1%)                      ||
+||    Running time : 0.46 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-Pf2-009.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 23066969                                              ||
+||    Successfully assigned fragments : 21063873 (91.3%)                      ||
+||    Running time : 0.48 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-Pf2-010.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 21306304                                              ||
+||    Successfully assigned fragments : 19639398 (92.2%)                      ||
+||    Running time : 0.43 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-Pf2-011.bam...                         ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 23633860                                              ||
+||    Successfully assigned fragments : 21562406 (91.2%)                      ||
+||    Running time : 0.47 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-SN15-000.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 22912071                                              ||
+||    Successfully assigned fragments : 21004368 (91.7%)                      ||
+||    Running time : 0.48 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-SN15-001.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 23680096                                              ||
+||    Successfully assigned fragments : 21784550 (92.0%)                      ||
+||    Running time : 0.49 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-SN15-002.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 20448824                                              ||
+||    Successfully assigned fragments : 18704919 (91.5%)                      ||
+||    Running time : 0.41 minutes                                             ||
+||                                                                            ||
+|| Process BAM file align/star/invitro-SN15-003.bam...                        ||
+||    Paired-end reads are included.                                          ||
+||    Assign fragments (read pairs) to features...                            ||
+||                                                                            ||
+||    WARNING: reads from the same pair were found not adjacent to each       ||
+||             other in the input (due to read sorting by location or         ||
+||             reporting of multi-mapping read pairs).                        ||
+||                                                                            ||
+||    Read re-ordering is performed.                                          ||
+||                                                                            ||
+||    Total fragments : 22711311                                              ||
+||    Successfully assigned fragments : 21007032 (92.5%)                      ||
+||    Running time : 0.50 minutes                                             ||
+||                                                                            ||
+||                         Read assignment finished.                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+	Command being timed: "make star_count"
+	User time (seconds): 2638.86
+	System time (seconds): 85.12
+	Percent of CPU this job got: 530%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 8:33.50
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1067768
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 1274541
+	Voluntary context switches: 1003988
+	Involuntary context switches: 1487384
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

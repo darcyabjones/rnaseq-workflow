@@ -1,0 +1,289 @@
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-3KO-020. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-020-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-020-R2.fastq.gz
+Feb 20 13:12:31 ..... Started STAR run
+Feb 20 13:12:31 ..... Loading genome
+Feb 20 13:12:33 ..... Started mapping
+Feb 20 13:14:05 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-3KO-021. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-021-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-021-R2.fastq.gz
+Feb 20 13:14:05 ..... Started STAR run
+Feb 20 13:14:05 ..... Loading genome
+Feb 20 13:14:06 ..... Started mapping
+Feb 20 13:15:24 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-3KO-022. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-022-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-022-R2.fastq.gz
+Feb 20 13:15:25 ..... Started STAR run
+Feb 20 13:15:25 ..... Loading genome
+Feb 20 13:15:25 ..... Started mapping
+Feb 20 13:16:47 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-3KO-023. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-023-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-023-R2.fastq.gz
+Feb 20 13:16:47 ..... Started STAR run
+Feb 20 13:16:47 ..... Loading genome
+Feb 20 13:16:47 ..... Started mapping
+Feb 20 13:18:11 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-Pf2-024. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-024-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-024-R2.fastq.gz
+Feb 20 13:18:11 ..... Started STAR run
+Feb 20 13:18:11 ..... Loading genome
+Feb 20 13:18:11 ..... Started mapping
+Feb 20 13:19:03 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-Pf2-025. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-025-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-025-R2.fastq.gz
+Feb 20 13:19:03 ..... Started STAR run
+Feb 20 13:19:04 ..... Loading genome
+Feb 20 13:19:04 ..... Started mapping
+Feb 20 13:19:48 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-Pf2-026. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-026-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-026-R2.fastq.gz
+Feb 20 13:19:48 ..... Started STAR run
+Feb 20 13:19:49 ..... Loading genome
+Feb 20 13:19:49 ..... Started mapping
+Feb 20 13:20:29 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-Pf2-027. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-027-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-Pf2-027-R2.fastq.gz
+Feb 20 13:20:29 ..... Started STAR run
+Feb 20 13:20:29 ..... Loading genome
+Feb 20 13:20:30 ..... Started mapping
+Feb 20 13:21:25 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-SN15-016. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-016-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-016-R2.fastq.gz
+Feb 20 13:21:26 ..... Started STAR run
+Feb 20 13:21:26 ..... Loading genome
+Feb 20 13:21:26 ..... Started mapping
+Feb 20 13:23:35 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-SN15-017. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-017-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-017-R2.fastq.gz
+Feb 20 13:23:35 ..... Started STAR run
+Feb 20 13:23:35 ..... Loading genome
+Feb 20 13:23:35 ..... Started mapping
+Feb 20 13:25:51 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-SN15-018. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-018-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-018-R2.fastq.gz
+Feb 20 13:25:51 ..... Started STAR run
+Feb 20 13:25:51 ..... Loading genome
+Feb 20 13:25:51 ..... Started mapping
+Feb 20 13:27:51 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-SN15-019. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-019-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-SN15-019-R2.fastq.gz
+Feb 20 13:27:51 ..... Started STAR run
+Feb 20 13:27:51 ..... Loading genome
+Feb 20 13:27:51 ..... Started mapping
+Feb 20 13:30:12 ..... Finished successfully
+make: *** No rule to make target `genome_index/star/invitro-Pf2-008.SJ.out.tab', needed by `star_index'.  Stop.
+Command exited with non-zero status 2
+	Command being timed: "make star_index"
+	User time (seconds): 10148.25
+	System time (seconds): 294.90
+	Percent of CPU this job got: 983%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 17:41.37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4217472
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 5
+	Minor (reclaiming a frame) page faults: 8587311
+	Voluntary context switches: 1308130
+	Involuntary context switches: 1077106
+	Swaps: 0
+	File system inputs: 3232
+	File system outputs: 22216
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2

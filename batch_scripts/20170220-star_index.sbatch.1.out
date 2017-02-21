@@ -1,0 +1,70 @@
+STAR \
+    --runThreadN 24 \
+    --runMode genomeGenerate \
+    --genomeDir genome_index/star \
+    --genomeFastaFiles /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15_scaffolds.fasta \
+    --sjdbGTFfile /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf \
+    --sjdbOverhang 124 \
+    --genomeSAindexNbases 11
+Feb 20 11:31:38 ..... Started STAR run
+Feb 20 11:31:38 ... Starting to generate Genome files
+Feb 20 11:31:39 ... starting to sort  Suffix Array. This may take a long time...
+Feb 20 11:31:39 ... sorting Suffix Array chunks and saving them to disk...
+Feb 20 11:31:46 ... loading chunks from disk, packing SA...
+Feb 20 11:31:50 ... Finished generating suffix array
+Feb 20 11:31:50 ... Generating Suffix Array index
+Feb 20 11:31:52 ... Completed Suffix Array index
+Feb 20 11:31:52 ..... Processing annotations GTF
+Feb 20 11:31:53 ..... Inserting junctions into the genome indices
+Feb 20 11:32:00 ... writing Genome to disk ...
+Feb 20 11:32:01 ... writing Suffix Array to disk ...
+Feb 20 11:32:02 ... writing SAindex to disk
+Feb 20 11:32:02 ..... Finished successfully
+STAR \
+		--runThreadN 24 \
+		--readFilesCommand zcat \
+		--genomeDir genome_index/star \
+		--outSAMtype None \
+		--outSAMmode None \
+		--outSJfilterReads All \
+		--outSJfilterOverhangMin 5 1 1 1 \
+		--outSJfilterCountUniqueMin 10 5 5 5 \
+		--outSJfilterDistToOtherSJmin 5 0 0 3 \
+		--outSJfilterIntronMaxVsReadN 0 1 500 5000 10000 20000 \
+		--alignIntronMin 5 \
+		--alignIntronMax 10000 \
+		--alignSJoverhangMin 1 \
+		--alignSJDBoverhangMin 1 \
+		--alignSoftClipAtReferenceEnds No \
+		--outFileNamePrefix genome_index/star/inplanta-3KO-020. \
+		--readFilesIn /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-020-R1.fastq.gz /scratch/y95/darcyabjones/rnaseq-workflow/data/inplanta-3KO-020-R2.fastq.gz
+Feb 20 11:32:02 ..... Started STAR run
+Feb 20 11:32:02 ..... Loading genome
+Feb 20 11:32:03 ..... Started mapping
+terminate called after throwing an instance of 'std::bad_alloc'
+  what():  std::bad_alloc
+make: *** [genome_index/star/inplanta-3KO-020.SJ.out.tab] Aborted
+Command exited with non-zero status 2
+	Command being timed: "make star_index"
+	User time (seconds): 132.24
+	System time (seconds): 4.26
+	Percent of CPU this job got: 502%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:27.14
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4103884
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 2
+	Minor (reclaiming a frame) page faults: 1843055
+	Voluntary context switches: 7807
+	Involuntary context switches: 60341
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2
