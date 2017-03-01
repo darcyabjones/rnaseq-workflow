@@ -1,0 +1,81 @@
+cuffmerge \
+	  -p 24 \
+          -g /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf \
+          -s /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15_scaffolds.fasta \
+          -o cufflinks_assemble/star/ \
+          cufflinks_assemble/star//to_be_merged.txt
+
+[Wed Mar  1 09:38:50 2017] Beginning transcriptome assembly merge
+-------------------------------------------
+
+[Wed Mar  1 09:38:50 2017] Preparing output location cufflinks_assemble/star//
+[Wed Mar  1 09:39:22 2017] Converting GTF files to SAM
+[09:39:22] Loading reference annotation.
+[09:39:23] Loading reference annotation.
+[09:39:24] Loading reference annotation.
+[09:39:24] Loading reference annotation.
+[09:39:25] Loading reference annotation.
+[09:39:26] Loading reference annotation.
+[09:39:26] Loading reference annotation.
+[09:39:27] Loading reference annotation.
+[09:39:28] Loading reference annotation.
+[09:39:28] Loading reference annotation.
+[09:39:30] Loading reference annotation.
+[09:39:31] Loading reference annotation.
+[09:39:32] Loading reference annotation.
+[09:39:32] Loading reference annotation.
+[09:39:33] Loading reference annotation.
+[09:39:35] Loading reference annotation.
+[09:39:36] Loading reference annotation.
+[09:39:37] Loading reference annotation.
+[09:39:38] Loading reference annotation.
+[09:39:38] Loading reference annotation.
+[09:39:39] Loading reference annotation.
+[09:39:41] Loading reference annotation.
+[09:39:41] Loading reference annotation.
+[09:39:42] Loading reference annotation.
+[Wed Mar  1 09:39:44 2017] Quantitating transcripts
+You are using Cufflinks v2.2.1, which is the most recent release.
+Command line:
+cufflinks -o cufflinks_assemble/star// -F 0.05 -g /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf -q --overhang-tolerance 200 --library-type=transfrags -A 0.0 --min-frags-per-transfrag 0 --no-5-extend -p 24 cufflinks_assemble/star//tmp/mergeSam_fileZKjqhZ 
+[bam_header_read] EOF marker is absent. The input is probably truncated.
+[bam_header_read] invalid BAM binary header (this is not a BAM file).
+File cufflinks_assemble/star//tmp/mergeSam_fileZKjqhZ doesn't appear to be a valid BAM file, trying SAM...
+[09:39:46] Loading reference annotation.
+[09:39:46] Inspecting reads and determining fragment length distribution.
+Processed 6857 loci.                        
+> Map Properties:
+>	Normalized Map Mass: 489361.00
+>	Raw Map Mass: 489361.00
+>	Fragment Length Distribution: Truncated Gaussian (default)
+>	              Default Mean: 200
+>	           Default Std Dev: 80
+[09:39:48] Assembling transcripts and estimating abundances.
+Processed 6857 loci.                        
+[Wed Mar  1 09:39:57 2017] Comparing against reference file /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf
+You are using Cufflinks v2.2.1, which is the most recent release.
+[Wed Mar  1 09:40:01 2017] Comparing against reference file /scratch/y95/darcyabjones/rnaseq-workflow/data/Parastagonospora_nodorum_SN15.gtf
+You are using Cufflinks v2.2.1, which is the most recent release.
+	Command being timed: "make star_cufflinks_ass"
+	User time (seconds): 114.14
+	System time (seconds): 6.97
+	Percent of CPU this job got: 158%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:16.46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 146604
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 718167
+	Voluntary context switches: 340890
+	Involuntary context switches: 25427
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
