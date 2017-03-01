@@ -4,6 +4,11 @@ SPACE +=
 COMMA := ,
 NCPU=24
 
+define NEWLINE
+
+
+endef
+
 DATA=$(C)/data
 PREFIX=SN15
 GENOME_FILE=$(DATA)/Parastagonospora_nodorum_SN15_scaffolds.fasta
@@ -645,19 +650,19 @@ $(STAR_CUFFLINKS_ASS_DIR)/%/transcripts.gtf: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATIO
 $(HISAT_CUFFLINKS_ASS_MERGED): $(HISAT_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
 	
-	@echo $(subst $(SPACE),\\n,$(HISAT_CUFFLINKS_ASS_FILES)) > $(dir $@)/to_be_merged.txt
+	@echo "$(subst $(SPACE),$(NEWLINE),$(HISAT_CUFFLINKS_ASS_FILES))" > $(dir $@)/to_be_merged.txt
 	cuffmerge \
 		--merge
 	  -p $(NCPU) \
 		-g $(ANNOTATION_FILE) \
-		-s $(GENOME_FILE) \KER_COUNT_FILE
+		-s $(GENOME_FILE) \
 		-o $(dir $@) \
 		$(dir $@)/to_be_merged.txt
 
 $(STAR_CUFFLINKS_ASS_MERGED): $(STAR_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
 	
-	@echo $(subst $(SPACE),\\n,$(STAR_CUFFLINKS_ASS_FILES)) > $(dir $@)/to_be_merged.txt
+	@echo "$(subst $(SPACE),$(NEWLINE),$(STAR_CUFFLINKS_ASS_FILES))" > $(dir $@)/to_be_merged.txt
 	cuffmerge \
 	  -p $(NCPU) \
           -g $(ANNOTATION_FILE) \

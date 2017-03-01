@@ -5,6 +5,7 @@
 #SBATCH --ntasks=12
 #SBATCH --ntasks-per-core=1
 
-module load bedtools/2.25.0
+module load bedtools/2.26.0-gcc
+module load samtools/1.3.1-gcc
 
 /usr/bin/time -v make -j 12 star_coverage

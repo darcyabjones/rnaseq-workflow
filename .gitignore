@@ -96,6 +96,7 @@ counts/*
 coverage/*
 genome_index/*
 data/*
+cufflinks_assemble/*
 
 # bio stuff
 *.fastq
