@@ -199,27 +199,19 @@ STAR_CUFFLINKS_ASS_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_CU
 HISAT_CUFFLINKS_ASS_MERGED=$(HISAT_CUFFLINKS_ASS_DIR)/merged.gtf
 STAR_CUFFLINKS_ASS_MERGED=$(STAR_CUFFLINKS_ASS_DIR)/merged.gtf
 
-# 07 - Count reads for ballgown
-# Using table maker from here https://github.com/leekgroup/tablemaker
+# 07- count cufflinks
 
-TABLEMAKER_COUNT_DIR=stringtie_count
-TABLEMAKER_COUNT_FILE=e_data.ctab
+# 04 - Count reads
 
-HISAT_TABLEMAKER_COUNT_DIR=$(TABLEMAKER_COUNT_DIR)/hisat2
-HISAT_TABLEMAKER_COUNT_TARGETS=$(addprefix $(HISAT_TABLEMAKER_COUNT_DIR)/, $(addsuffix /$(TABLEMAKER_COUNT_FILE), %))
-HISAT_TABLEMAKER_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(HISAT_TABLEMAKER_COUNT_TARGETS)))
+CUFF_COUNT_DIR=cufflinks_counts
 
-STAR_TABLEMAKER_COUNT_DIR=$(TABLEMAKER_COUNT_DIR)/star
-STAR_TABLEMAKER_COUNT_TARGETS=$(addprefix $(STAR_TABLEMAKER_COUNT_DIR)/, $(addsuffix /$(TABLEMAKER_COUNT_FILE), %))
-STAR_TABLEMAKER_COUNT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(STAR_TABLEMAKER_COUNT_TARGETS)))
+HISAT_CUFF_COUNT_DIR=$(CUFF_COUNT_DIR)/hisat2
+HISAT_CUFF_COUNT_FILES=$(addprefix $(HISAT_CUFF_COUNT_DIR)/, feature_counts.tsv)
 
+STAR_CUFF_COUNT_DIR=$(CUFF_COUNT_DIR)/star
+STAR_CUFF_COUNT_FILES=$(addprefix $(STAR_CUFF_COUNT_DIR)/, feature_counts.tsv)
 
-#08 - Count reads for  DEXSeq
-
-DEXSEQ_DIR=dexseq
-
-DEXSEQ_GTF=$(addprefix $(DEXSEQ_DIR)/,$(PREFIX)-dexseq_prepped.gtf)
-DEXSEQ_COUNT_FILE=$(addprefix $(DEXSEQ_DIR)/,exon_counts.tsv)
+#
 
 
 phony:
@@ -263,12 +255,9 @@ hisat_cufflinks_ass: $(HISAT_CUFFLINKS_ASS_MERGED)
 star_cufflinks_ass: $(STAR_CUFFLINKS_ASS_MERGED)
 cufflinks_ass: star_cufflinks_ass hisat_cufflinks_ass
 
-star_tablemaker_counts: $(STAR_TABLEMAKER_COUNT_FILES)
-tablemaker_counts: star_tablemaker_counts
-
-
-dexseq_annotations: $(DEXSEQ_GTF)
-dexseq_counts: $(DEXSEQ_COUNT_FILE)
+hisat_cufflinks_count: $(HISAT_CUFF_COUNT_FILES)
+star_cufflinks_count: $(STAR_CUFF_COUNT_FILES)
+cufflinks_count: hisat_cufflinks_count star_cufflinks_count
 
 # 01 - build index
 $(HISAT_GENOME_INDEX_FILES): $(GENOME_FILE)
@@ -670,22 +659,12 @@ $(STAR_CUFFLINKS_ASS_MERGED): $(STAR_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
           -o $(dir $@) \
           $(dir $@)/to_be_merged.txt
 
-# 07 - tablemaker counts
+# 07 - count cufflinks
 
-$(STAR_TABLEMAKER_COUNT_DIR)/%/$(TABLEMAKER_COUNT_FILE): $(STAR_CUFFLINKS_ASS_MERGED) $(STAR_ALIGN_DIR)/%.bam
+$(HISAT_CUFF_COUNT_FILES): $(HISAT_BAM_FILES) $(HISAT_CUFFLINKS_ASS_MERGED)
 	@mkdir -p $(dir $@)
-	tablemaker \
-		-p $(NCPU) \
-		-W \
-                --library-type=fr-firststrand \
-		-G $(STAR_CUFFLINKS_ASS_MERGED) \
-		-o $(dir $@) \
-		$(word 2, $^)
+	$(SUBREAD_DOCKER) featureCounts -a $(HISAT_CUFFLINKS_ASS_MERGED) -t exon -s 2 -p -B -C -T $(NCPU) -o $@ $(HISAT_BAM_FILES)
 
-$(DEXSEQ_GTF): $(STAR_CUFFLINKS_ASS_MERGED)
+$(STAR_CUFF_COUNT_FILES): $(STAR_BAM_FILES) $(STAR_CUFFLINKS_ASS_MERGED)
 	@mkdir -p $(dir $@)
-	bin/dexseq_prepare_annotation2.py -f $@ $< $@.gff
-
-$(DEXSEQ_COUNT_FILE): $(STAR_BAM_FILES) $(DEXSEQ_GTF)
-	@mkdir -p $(dir $@)
-	featureCounts -f -O -s 2 -p -T $(NCPU) -F GTF -t exonic_part -a $(DEXSEQ_GTF) -o $@ $(STAR_BAM_FILES)
+	$(SUBREAD_DOCKER) featureCounts -a $(STAR_CUFFLINKS_ASS_MERGED) -t exon -s 2 -p -B -C -T $(NCPU) -o $@ $(STAR_BAM_FILES)
