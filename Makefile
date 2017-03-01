@@ -665,10 +665,10 @@ $(STAR_CUFFLINKS_ASS_MERGED): $(STAR_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@echo "$(STAR_CUFFLINKS_ASS_FILES)" | tr " " "\n" > $(dir $@)/to_be_merged.txt
 	cuffmerge \
 	  -p $(NCPU) \
-          -g $(ANNOTATION_FILE) \
-          -s $(GENOME_FILE) \
-          -o $(dir $@) \
-          $(dir $@)/to_be_merged.txt
+    -g $(ANNOTATION_FILE) \
+    -s $(GENOME_FILE) \
+    -o $(dir $@) \
+    $(dir $@)/to_be_merged.txt
 
 # 07 - tablemaker counts
 
@@ -677,7 +677,7 @@ $(STAR_TABLEMAKER_COUNT_DIR)/%/$(TABLEMAKER_COUNT_FILE): $(STAR_CUFFLINKS_ASS_ME
 	tablemaker \
 		-p $(NCPU) \
 		-W \
-                --library-type=fr-firststrand \
+    --library-type=fr-firststrand \
 		-G $(STAR_CUFFLINKS_ASS_MERGED) \
 		-o $(dir $@) \
 		$(word 2, $^)
