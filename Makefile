@@ -201,8 +201,6 @@ STAR_CUFFLINKS_ASS_MERGED=$(STAR_CUFFLINKS_ASS_DIR)/merged.gtf
 
 # 07- count cufflinks
 
-# 04 - Count reads
-
 CUFF_COUNT_DIR=cufflinks_counts
 
 HISAT_CUFF_COUNT_DIR=$(CUFF_COUNT_DIR)/hisat2
@@ -211,7 +209,20 @@ HISAT_CUFF_COUNT_FILES=$(addprefix $(HISAT_CUFF_COUNT_DIR)/, feature_counts.tsv)
 STAR_CUFF_COUNT_DIR=$(CUFF_COUNT_DIR)/star
 STAR_CUFF_COUNT_FILES=$(addprefix $(STAR_CUFF_COUNT_DIR)/, feature_counts.tsv)
 
-#
+# 08 cuff quant
+
+ORIG_CUFF_QUANT_DIR=cufflinks_quant_orig
+CUFF_QUANT_FILE=abundances.cxb
+ORIG_STAR_CUFF_QUANT_DIR=$(ORIG_CUFF_QUANT_DIR)/star
+
+ORIG_STAR_CUFF_QUANT_TARGETS=$(foreach e, $(CUFF_QUANT_FILE), $(addprefix $(ORIG_STAR_CUFF_QUANT_DIR)/%/, $(e)))
+ORIG_STAR_CUFF_QUANT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(ORIG_STAR_CUFF_QUANT_TARGETS)))
+
+NEW_CUFF_QUANT_DIR=cufflinks_quant_new
+NEW_STAR_CUFF_QUANT_DIR=$(NEW_CUFF_QUANT_DIR)/star
+
+NEW_STAR_CUFF_QUANT_TARGETS=$(foreach e, $(CUFF_QUANT_FILE), $(addprefix $(NEW_STAR_CUFF_QUANT_DIR)/%/, $(e)))
+NEW_STAR_CUFF_QUANT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(NEW_STAR_CUFF_QUANT_TARGETS)))
 
 
 phony:
@@ -258,6 +269,9 @@ cufflinks_ass: star_cufflinks_ass hisat_cufflinks_ass
 hisat_cufflinks_count: $(HISAT_CUFF_COUNT_FILES)
 star_cufflinks_count: $(STAR_CUFF_COUNT_FILES)
 cufflinks_count: hisat_cufflinks_count star_cufflinks_count
+
+star_cufflinks_quant: $(ORIG_STAR_CUFF_QUANT_FILES) $(NEW_STAR_CUFF_QUANT_FILES)
+cufflinks_quant: star_cufflinks_quant
 
 # 01 - build index
 $(HISAT_GENOME_INDEX_FILES): $(GENOME_FILE)
@@ -668,3 +682,28 @@ $(HISAT_CUFF_COUNT_FILES): $(HISAT_BAM_FILES) $(HISAT_CUFFLINKS_ASS_MERGED)
 $(STAR_CUFF_COUNT_FILES): $(STAR_BAM_FILES) $(STAR_CUFFLINKS_ASS_MERGED)
 	@mkdir -p $(dir $@)
 	$(SUBREAD_DOCKER) featureCounts -a $(STAR_CUFFLINKS_ASS_MERGED) -t exon -s 2 -p -B -C -T $(NCPU) -o $@ $(STAR_BAM_FILES)
+
+
+# 08
+
+$(ORIG_STAR_CUFF_QUANT_DIR)/%/abundances.cxb: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
+	@mkdir -p $(dir $@)
+	cufflinks \
+	  -p $(NCPU) \
+		--frag-bias-correct $(GENOME_FILE) \
+		--multi-read-correct \
+		--library-type=fr-firststrand \
+		-output-dir $(dir $@) \
+		$(ANNOTATION_FILE) \
+	  $(word 1, $^)
+
+$(NEW_STAR_CUFF_QUANT_DIR)/%/abundances.cxb: $(STAR_ALIGN_DIR)/%.bam $(STAR_CUFFLINKS_ASS_MERGED)
+	@mkdir -p $(dir $@)
+	cufflinks \
+	  -p $(NCPU) \
+		--frag-bias-correct $(GENOME_FILE) \
+		--multi-read-correct \
+		--library-type=fr-firststrand \
+		-output-dir $(dir $@) \
+		$(STAR_CUFFLINKS_ASS_MERGED) \
+	  $(word 1, $^)
