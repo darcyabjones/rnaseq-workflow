@@ -649,8 +649,8 @@ $(STAR_CUFFLINKS_ASS_DIR)/%/transcripts.gtf: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATIO
 
 $(HISAT_CUFFLINKS_ASS_MERGED): $(HISAT_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	
-	@echo "$(subst $(SPACE),$(NEWLINE),$(HISAT_CUFFLINKS_ASS_FILES))" > $(dir $@)/to_be_merged.txt
+
+	@echo "$(HISAT_CUFFLINKS_ASS_FILES)" | tr " " "\n" > $(dir $@)/to_be_merged.txt
 	cuffmerge \
 		--merge
 	  -p $(NCPU) \
@@ -661,18 +661,18 @@ $(HISAT_CUFFLINKS_ASS_MERGED): $(HISAT_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 
 $(STAR_CUFFLINKS_ASS_MERGED): $(STAR_CUFFLINKS_ASS_FILES) $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	
-	@echo "$(subst $(SPACE),$(NEWLINE),$(STAR_CUFFLINKS_ASS_FILES))" > $(dir $@)/to_be_merged.txt
+
+	@echo "$(STAR_CUFFLINKS_ASS_FILES)" | tr " " "\n" > $(dir $@)/to_be_merged.txt
 	cuffmerge \
 	  -p $(NCPU) \
           -g $(ANNOTATION_FILE) \
           -s $(GENOME_FILE) \
           -o $(dir $@) \
           $(dir $@)/to_be_merged.txt
-		
+
 # 07 - tablemaker counts
-		
-$(STAR_TABLEMAKER_COUNT_DIR)/%/$(TABLEMAKER_COUNT_FILE): $(STAR_CUFFLINKS_ASS_MERGED) $(STAR_ALIGN_DIR)/%.bam 
+
+$(STAR_TABLEMAKER_COUNT_DIR)/%/$(TABLEMAKER_COUNT_FILE): $(STAR_CUFFLINKS_ASS_MERGED) $(STAR_ALIGN_DIR)/%.bam
 	@mkdir -p $(dir $@)
 	tablemaker \
 		-p $(NCPU) \
