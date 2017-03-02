@@ -225,6 +225,17 @@ NEW_STAR_CUFF_QUANT_TARGETS=$(foreach e, $(CUFF_QUANT_FILE), $(addprefix $(NEW_S
 NEW_STAR_CUFF_QUANT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(NEW_STAR_CUFF_QUANT_TARGETS)))
 
 
+# 09 cuffnorm
+
+CUFF_NORM_FILE=genes.fpkm_table
+ORIG_CUFF_NORM_DIR=cufflinks_norm_orig
+
+ORIG_STAR_CUFF_NORM_DIR=$(ORIG_CUFF_NORM_DIR)/star
+ORIG_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(ORIG_STAR_CUFF_NORM_DIR)/$(e)))
+
+NEW_STAR_CUFF_NORM_DIR=$(NEW_CUFF_NORM_DIR)/star
+NEW_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(NEW_STAR_CUFF_NORM_DIR)/$(e)))
+
 phony:
 	@echo $(DEXSEQ_GTF)
 	@echo
@@ -272,6 +283,9 @@ cufflinks_count: hisat_cufflinks_count star_cufflinks_count
 
 star_cufflinks_quant: $(ORIG_STAR_CUFF_QUANT_FILES) $(NEW_STAR_CUFF_QUANT_FILES)
 cufflinks_quant: star_cufflinks_quant
+
+star_cufflinks_norm: $(NEW_STAR_CUFF_NORM_FILES) $(ORIG_STAR_CUFF_NORM_FILES)
+cufflinks_norm: star_cufflinks_norm
 
 # 01 - build index
 $(HISAT_GENOME_INDEX_FILES): $(GENOME_FILE)
@@ -707,3 +721,21 @@ $(NEW_STAR_CUFF_QUANT_DIR)/%/abundances.cxb: $(STAR_ALIGN_DIR)/%.bam $(STAR_CUFF
 		--output-dir $(dir $@) \
 		$(STAR_CUFFLINKS_ASS_MERGED) \
 	  $(word 1, $^)
+
+$(ORIG_STAR_CUFF_NORM_FILES): $(ANNOTATION_FILE) $(ORIG_STAR_CUFF_QUANT_FILES)
+	@mkdir -p $(dir $@)
+	cuffnorm \
+		-p $(NCPU) \
+		--library-type=fr-firststrand \
+		--library-norm-method=geometric \
+		$(ANNOTATION_FILE) \
+		$(subst $(SPACE),$(COMMA),$(ORIG_STAR_CUFF_QUANT_FILES))
+
+$(NEW_STAR_CUFF_NORM_FILES): $(ANNOTATION_FILE) $(NEW_STAR_CUFF_QUANT_FILES)
+	@mkdir -p $(dir $@)
+	cuffnorm \
+		-p $(NCPU) \
+		--library-type=fr-firststrand \
+		--library-norm-method=geometric \
+		$(ANNOTATION_FILE) \
+		$(subst $(SPACE),$(COMMA),$(NEW_STAR_CUFF_QUANT_FILES))
