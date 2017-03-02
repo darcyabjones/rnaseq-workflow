@@ -97,6 +97,8 @@ coverage/*
 genome_index/*
 data/*
 cufflinks_assemble/*
+cufflinks_quant_new/*
+cufflinks_quant_orig/*
 
 # bio stuff
 *.fastq

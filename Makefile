@@ -688,22 +688,22 @@ $(STAR_CUFF_COUNT_FILES): $(STAR_BAM_FILES) $(STAR_CUFFLINKS_ASS_MERGED)
 
 $(ORIG_STAR_CUFF_QUANT_DIR)/%/abundances.cxb: $(STAR_ALIGN_DIR)/%.bam $(ANNOTATION_FILE)
 	@mkdir -p $(dir $@)
-	cufflinks \
+	cuffquant \
 	  -p $(NCPU) \
-		--frag-bias-correct $(GENOME_FILE) \
+	  --frag-bias-correct $(GENOME_FILE) \
 		--multi-read-correct \
 		--library-type=fr-firststrand \
-		-output-dir $(dir $@) \
+		--output-dir $(dir $@) \
 		$(ANNOTATION_FILE) \
 	  $(word 1, $^)
 
 $(NEW_STAR_CUFF_QUANT_DIR)/%/abundances.cxb: $(STAR_ALIGN_DIR)/%.bam $(STAR_CUFFLINKS_ASS_MERGED)
 	@mkdir -p $(dir $@)
-	cufflinks \
+	cuffquant \
 	  -p $(NCPU) \
 		--frag-bias-correct $(GENOME_FILE) \
 		--multi-read-correct \
 		--library-type=fr-firststrand \
-		-output-dir $(dir $@) \
+		--output-dir $(dir $@) \
 		$(STAR_CUFFLINKS_ASS_MERGED) \
 	  $(word 1, $^)
