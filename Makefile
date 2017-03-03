@@ -215,14 +215,14 @@ ORIG_CUFF_QUANT_DIR=cufflinks_quant_orig
 CUFF_QUANT_FILE=abundances.cxb
 ORIG_STAR_CUFF_QUANT_DIR=$(ORIG_CUFF_QUANT_DIR)/star
 
-ORIG_STAR_CUFF_QUANT_TARGETS=$(foreach e, $(CUFF_QUANT_FILE), $(addprefix $(ORIG_STAR_CUFF_QUANT_DIR)/%/, $(e)))
-ORIG_STAR_CUFF_QUANT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(ORIG_STAR_CUFF_QUANT_TARGETS)))
+ORIG_STAR_CUFF_QUANT_TARGETS=$(foreach e,$(CUFF_QUANT_FILE),$(addprefix $(ORIG_STAR_CUFF_QUANT_DIR)/%/,$(e)))
+ORIG_STAR_CUFF_QUANT_FILES=$(foreach s,$(SAMPLE_NAMES),$(subst %,$(s),$(ORIG_STAR_CUFF_QUANT_TARGETS)))
 
 NEW_CUFF_QUANT_DIR=cufflinks_quant_new
 NEW_STAR_CUFF_QUANT_DIR=$(NEW_CUFF_QUANT_DIR)/star
 
-NEW_STAR_CUFF_QUANT_TARGETS=$(foreach e, $(CUFF_QUANT_FILE), $(addprefix $(NEW_STAR_CUFF_QUANT_DIR)/%/, $(e)))
-NEW_STAR_CUFF_QUANT_FILES=$(foreach s, $(SAMPLE_NAMES), $(subst %,$(s), $(NEW_STAR_CUFF_QUANT_TARGETS)))
+NEW_STAR_CUFF_QUANT_TARGETS=$(foreach e,$(CUFF_QUANT_FILE),$(addprefix $(NEW_STAR_CUFF_QUANT_DIR)/%/,$(e)))
+NEW_STAR_CUFF_QUANT_FILES=$(foreach s,$(SAMPLE_NAMES),$(subst %,$(s),$(NEW_STAR_CUFF_QUANT_TARGETS)))
 
 
 # 09 cuffnorm
@@ -231,16 +231,16 @@ CUFF_NORM_FILE=genes.fpkm_table
 ORIG_CUFF_NORM_DIR=cufflinks_norm_orig
 
 ORIG_STAR_CUFF_NORM_DIR=$(ORIG_CUFF_NORM_DIR)/star
-ORIG_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(ORIG_STAR_CUFF_NORM_DIR)/$(e)))
+ORIG_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(ORIG_STAR_CUFF_NORM_DIR)/, $(e)))
 
+
+NEW_CUFF_NORM_DIR=cufflinks_norm_new
 NEW_STAR_CUFF_NORM_DIR=$(NEW_CUFF_NORM_DIR)/star
-NEW_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(NEW_STAR_CUFF_NORM_DIR)/$(e)))
+NEW_STAR_CUFF_NORM_FILES=$(foreach e, $(CUFF_NORM_FILE), $(addprefix $(NEW_STAR_CUFF_NORM_DIR)/, $(e)))
 
 phony:
-	@echo $(DEXSEQ_GTF)
-	@echo
-	@echo $(DEXSEQ_COUNT_FILE)
-
+	@echo $(subst $(SPACE),$(COMMA),$(NEW_STAR_CUFF_QUANT_FILES))
+	@echo $(COMMA)
 
 cleanall: all clean
 	@rm -rf $^
@@ -284,7 +284,7 @@ cufflinks_count: hisat_cufflinks_count star_cufflinks_count
 star_cufflinks_quant: $(ORIG_STAR_CUFF_QUANT_FILES) $(NEW_STAR_CUFF_QUANT_FILES)
 cufflinks_quant: star_cufflinks_quant
 
-star_cufflinks_norm: $(NEW_STAR_CUFF_NORM_FILES) $(ORIG_STAR_CUFF_NORM_FILES)
+star_cufflinks_norm: $(ORIG_STAR_CUFF_NORM_FILES)
 cufflinks_norm: star_cufflinks_norm
 
 # 01 - build index
@@ -728,8 +728,16 @@ $(ORIG_STAR_CUFF_NORM_FILES): $(ANNOTATION_FILE) $(ORIG_STAR_CUFF_QUANT_FILES)
 		-p $(NCPU) \
 		--library-type=fr-firststrand \
 		--library-norm-method=geometric \
+		--output-dir $(dir $@) \
 		$(ANNOTATION_FILE) \
-		$(subst $(SPACE),$(COMMA),$(ORIG_STAR_CUFF_QUANT_FILES))
+		cufflinks_quant_orig/star/inplanta-3KO-020/abundances.cxb,cufflinks_quant_orig/star/inplanta-3KO-021/abundances.cxb,cufflinks_quant_orig/star/inplanta-3KO-022/abundances.cxb,cufflinks_quant_orig/star/inplanta-3KO-023/abundances.cxb \
+		cufflinks_quant_orig/star/inplanta-Pf2-024/abundances.cxb,cufflinks_quant_orig/star/inplanta-Pf2-025/abundances.cxb,cufflinks_quant_orig/star/inplanta-Pf2-026/abundances.cxb,cufflinks_quant_orig/star/inplanta-Pf2-027/abundances.cxb \
+		cufflinks_quant_orig/star/inplanta-SN15-016/abundances.cxb,cufflinks_quant_orig/star/inplanta-SN15-017/abundances.cxb,cufflinks_quant_orig/star/inplanta-SN15-018/abundances.cxb,cufflinks_quant_orig/star/inplanta-SN15-019/abundances.cxb \
+		cufflinks_quant_orig/star/invitro-3KO-004/abundances.cxb,cufflinks_quant_orig/star/invitro-3KO-005/abundances.cxb,cufflinks_quant_orig/star/invitro-3KO-006/abundances.cxb,cufflinks_quant_orig/star/invitro-3KO-007/abundances.cxb \
+		cufflinks_quant_orig/star/invitro-Pf2-008/abundances.cxb,cufflinks_quant_orig/star/invitro-Pf2-009/abundances.cxb,cufflinks_quant_orig/star/invitro-Pf2-010/abundances.cxb,cufflinks_quant_orig/star/invitro-Pf2-011/abundances.cxb \
+		cufflinks_quant_orig/star/invitro-SN15-000/abundances.cxb,cufflinks_quant_orig/star/invitro-SN15-001/abundances.cxb,cufflinks_quant_orig/star/invitro-SN15-002/abundances.cxb,cufflinks_quant_orig/star/invitro-SN15-003/abundances.cxb
+
+
 
 $(NEW_STAR_CUFF_NORM_FILES): $(ANNOTATION_FILE) $(NEW_STAR_CUFF_QUANT_FILES)
 	@mkdir -p $(dir $@)
@@ -737,5 +745,11 @@ $(NEW_STAR_CUFF_NORM_FILES): $(ANNOTATION_FILE) $(NEW_STAR_CUFF_QUANT_FILES)
 		-p $(NCPU) \
 		--library-type=fr-firststrand \
 		--library-norm-method=geometric \
+		--output-dir $(dir $@) \
 		$(ANNOTATION_FILE) \
-		$(subst $(SPACE),$(COMMA),$(NEW_STAR_CUFF_QUANT_FILES))
+		cufflinks_quant_new/star/inplanta-3KO-020/abundances.cxb,cufflinks_quant_new/star/inplanta-3KO-021/abundances.cxb,cufflinks_quant_new/star/inplanta-3KO-022/abundances.cxb,cufflinks_quant_new/star/inplanta-3KO-023/abundances.cxb \
+		cufflinks_quant_new/star/inplanta-Pf2-024/abundances.cxb,cufflinks_quant_new/star/inplanta-Pf2-025/abundances.cxb,cufflinks_quant_new/star/inplanta-Pf2-026/abundances.cxb,cufflinks_quant_new/star/inplanta-Pf2-027/abundances.cxb \
+		cufflinks_quant_new/star/inplanta-SN15-016/abundances.cxb,cufflinks_quant_new/star/inplanta-SN15-017/abundances.cxb,cufflinks_quant_new/star/inplanta-SN15-018/abundances.cxb,cufflinks_quant_new/star/inplanta-SN15-019/abundances.cxb \
+		cufflinks_quant_new/star/invitro-3KO-004/abundances.cxb,cufflinks_quant_new/star/invitro-3KO-005/abundances.cxb,cufflinks_quant_new/star/invitro-3KO-006/abundances.cxb,cufflinks_quant_new/star/invitro-3KO-007/abundances.cxb \
+		cufflinks_quant_new/star/invitro-Pf2-008/abundances.cxb,cufflinks_quant_new/star/invitro-Pf2-009/abundances.cxb,cufflinks_quant_new/star/invitro-Pf2-010/abundances.cxb,cufflinks_quant_new/star/invitro-Pf2-011/abundances.cxb \
+		cufflinks_quant_new/star/invitro-SN15-000/abundances.cxb,cufflinks_quant_new/star/invitro-SN15-001/abundances.cxb,cufflinks_quant_new/star/invitro-SN15-002/abundances.cxb,cufflinks_quant_new/star/invitro-SN15-003/abundances.cxb

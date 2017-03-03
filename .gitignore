@@ -99,6 +99,8 @@ data/*
 cufflinks_assemble/*
 cufflinks_quant_new/*
 cufflinks_quant_orig/*
+cufflinks_norm_new/*
+cufflinks_norm_orig/*
 
 # bio stuff
 *.fastq
